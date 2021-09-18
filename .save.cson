@@ -1,0 +1,1 @@
+"**/*.lua": "taskkill /IM love.exe & love C:/Users/shaba/Documents/love"
