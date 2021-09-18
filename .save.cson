@@ -1,0 +1,2 @@
+"*/main.lua": "taskkill /IM love.exe & love C:/Users/shaba/Documents/love/static_noise"
+"*": "echo test"

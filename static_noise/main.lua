@@ -1,5 +1,6 @@
 function love.load()
   --open file, put in content, break up on newline
+
   love.window.setMode(950, 650, {
     fullscreen = false,
     vsync = 0,
@@ -7,9 +8,9 @@ function love.load()
     stencil = true,
     depth = 0,
     resizable = false,
-    borderless = true,
+    borderless = false,
     centered = false,
-    display = 1,
+    display = 1, 
     minwidth = 1,
     minheight = 1
   })
@@ -19,7 +20,7 @@ end
 
 --opens data, checks to see if its empty if not move the window to saved position
 function loader()
-  data = io.open("data", "r+")
+  data = io.open("static_noise/data", "r+")
   io.input(data)
   win_x = io.read(); -- if you do io.read it automatically moves to the next line
   if(win_x == nil) then
@@ -31,6 +32,7 @@ function loader()
     love.window.setPosition(win_x, win_y, 1)
   end
 end
+
 function love.draw()
     --first thing todo is remember where window was
     --arrays start at 1 in lua :D
@@ -43,13 +45,12 @@ function love.draw()
           love.graphics.setColor(love.math.random(0, 5), love.math.random(0, 1), love.math.random(0, 1))
           love.graphics.points(x, y)
       end
-
     end
-
+    love.graphics.setColor(0,0,0)
+    love.graphics.print(win_x .. "\n" .. win_y, 300, 300)
 end
 
 function love.quit()
-  --io.flush()
   data:seek("set")
   io.output(data)
   local x, y, dispindex = love.window.getPosition()
