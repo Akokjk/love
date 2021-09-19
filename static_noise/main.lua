@@ -1,7 +1,6 @@
 function love.load()
-  --open file, put in content, break up on newline
-
-  love.window.setMode(320, 240, {
+  loader()
+  love.window.setMode(200, 200, {
     fullscreen = false,
     vsync = 0,
     msaa = 0,
@@ -12,9 +11,11 @@ function love.load()
     centered = false,
     display = 1,
     minwidth = 1,
-    minheight = 1
+    minheight = 1,
+    x = win_x,
+    y = win_y
   })
-  loader()
+  love.window.setTitle("Static Noise")
   math.randomseed(os.time())
 end
 
@@ -29,7 +30,6 @@ function loader()
     io.write(x .. "\n" .. y)
   else
     win_y = io.read();
-    love.window.setPosition(win_x, win_y, 1)
   end
 end
 
