@@ -38,7 +38,7 @@ function love.draw()
     --arrays start at 1 in lua :D
 
     -- love.graphics.print("Testing 123", 400, 300)
-    width, height = love.graphics.getDimensions( )
+    width, height = love.graphics.getDimensions( ) 
     --create a buffer to hold static images of a certain size then loop through
     for  x=0, width, 1 do
       for  y=0, height, 1 do

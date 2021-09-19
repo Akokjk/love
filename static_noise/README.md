@@ -2,4 +2,5 @@ This is a unoptimized generation of "static." Basically just generate a random c
 
 What the data file is doing is storing the the window position from the previous use and moving it back to where it was when the program starts. There is a bug though the window tends to render before moving doesnt look very nice. data can be used to hold any number of elements could hold save data, settings, debug info, or anything else.
 
-I haven't determined how to run love with a console for debug information yet. 
+I haven't determined how to run love with a console for debug information yet.
+![alt text](static.gif)
