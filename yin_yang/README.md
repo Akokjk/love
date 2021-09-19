@@ -6,5 +6,6 @@ Fun things to try:
  - There is two ways to do this I can think of 1 easy, 1 hard
 2. Create patterns of repeating yin yang
 
-Preview: 
+Preview:
+
 ![alt text](yinyang.PNG)
