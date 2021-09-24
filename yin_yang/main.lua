@@ -21,7 +21,7 @@ function love.load()
 
   --project related varibles
   width, height = love.graphics.getDimensions()
-  centerX = width/2;
+  centerX = width/2; 
   centerY = height/2;
   radius = (width > height and height/2-10 or width/2-10)
 end
@@ -36,7 +36,7 @@ function love.draw()
       2. draw a half black circle with size radius from pi to 2 pi
       3. draw a half black circle with size radius/2 at the center minus half the radius
       4. repeat step 3 with a half white circle on other side
-      5. Add a 1/8 radius circle in at center +- radius*2 
+      5. Add a 1/8 radius circle in at center +- radius*2
     --]]
     love.graphics.clear( 29/255, 23/255, 23/255, 1, 0, false )
     love.graphics.setColor(255,255,255)
