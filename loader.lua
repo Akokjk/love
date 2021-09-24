@@ -4,7 +4,7 @@
 local loader = {}
 
 function loader.getWindowPos()
-  data = io.open("yin_yang/data", "r+")
+  data = io.open("data", "r+")
   io.input(data)
   win_x = io.read(); -- if you do io.read it automatically moves to the next line
   if(win_x == nil) then

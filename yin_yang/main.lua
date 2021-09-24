@@ -21,7 +21,7 @@ function love.load()
 
   --project related varibles
   width, height = love.graphics.getDimensions()
-  centerX = width/2; 
+  centerX = width/2;
   centerY = height/2;
   radius = (width > height and height/2-10 or width/2-10)
 end
