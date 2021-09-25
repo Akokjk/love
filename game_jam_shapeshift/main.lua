@@ -1,10 +1,10 @@
 local loader = require "loader"
 function love.load()
   --config options
-  screen_x = 600
-  screen_y = 600
+  screen_x = 1920
+  screen_y = 1080
   love.window.setMode(screen_x, screen_y, {
-    fullscreen = false,
+    fullscreen = true,
     vsync = 0,
     msaa = 0,
     stencil = true,
@@ -25,13 +25,17 @@ function love.load()
   centerY = height/2;
   radius_max = (width > height and height/2-10 or width/2-10)
   radius = 10 -- intial radius
-  rate_of_expansion = 1 -- 1 pixel per frame
-  num_of_points = 30 -- creates a series of points on the edge of the shape to propagate and interact with other elements
+  rate_of_expansion = .3 -- 1 pixel per frame
+  num_of_points = 1000 -- creates a series of points on the edge of the shape to propagate and interact with other elements
   points = {}
   point_vectors = {}
+  point_size = 3;
+
 end
 
 function love.draw()
+    love.graphics.setPointSize(point_size)
+
     --generate a radius based on the length of a click
     --generate a random number of points 3,4,5,6,7,8 on the edge of the circle
     --draw a polygon from the points
@@ -44,10 +48,11 @@ function love.draw()
     love.graphics.print("Shape Shift by Akokjk", 10, 10)
     if points[1] ~= nil then
       --love.graphics.print(points[1][2] or "idk", 10, 25)
-      love.graphics.polygon("line", get_points())
+      love.graphics.line( get_points())
     end
     --love.graphics.print(points[1][1] or "idk", 10, 25)
     love.graphics.points(points)
+
 
 
 
@@ -63,7 +68,14 @@ function get_points()
 end
 
 function love.update(dt)
+    if love.keyboard.isDown("escape") then
+        love.event.quit()
+    end
 
+
+
+
+    e = 2;
     for i=1, num_of_points do
       if points[i] ~= nil then
         points[i] = {points[i][1] + math.cos(point_vectors[i])*rate_of_expansion, points[i][2] + math.sin(point_vectors[i])*rate_of_expansion}
@@ -73,7 +85,17 @@ function love.update(dt)
         if(points[i][2] <= 0 or points[i][2] >= screen_y) then
           point_vectors[i] = point_vectors[i] + math.pi
         end
+        -- source for distance between points https://www.cuemath.com/geometry/distance-between-two-points/
+        for x = e, num_of_points do
+          distance = math.sqrt((points[i][1] - points[x][1])^2+(points[i][2] - points[x][2])^2)
+          if(distance < point_size) then
+            --if(point_vectors[i] + point_vectors[x] = )
+            point_vectors[i] = point_vectors[i] + math.pi
+            point_vectors[x] = point_vectors[x] + math.pi
+          end
+        end
 
+        e = e + 1
       end
     end
 
@@ -91,7 +113,7 @@ function reset_points()
 --math source:  https://www.dummies.com/education/math/trigonometry/use-coordinates-of-points-to-find-values-of-trigonometry-functions/
   for i=1, num_of_points do
     angle = (2 * math.pi)/num_of_points * i
-    point_vectors[i] = angle
+    point_vectors[i] = angle + love.math.random(0, .5*math.pi)
     points[i] = { (math.cos(angle) * radius) + centerX, (math.sin(angle) * radius)+centerY}
   end
 end
