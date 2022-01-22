@@ -26,7 +26,7 @@ function love.load()
   radius_max = (width > height and height/2-10 or width/2-10)
   radius = 10 -- intial radius
   rate_of_expansion = .3 -- 1 pixel per frame
-  num_of_points = 1000 -- creates a series of points on the edge of the shape to propagate and interact with other elements
+  num_of_points = 200 -- creates a series of points on the edge of the shape to propagate and interact with other elements
   points = {}
   point_vectors = {}
   point_size = 3;
@@ -48,7 +48,7 @@ function love.draw()
     love.graphics.print("Shape Shift by Akokjk", 10, 10)
     if points[1] ~= nil then
       --love.graphics.print(points[1][2] or "idk", 10, 25)
-      love.graphics.line( get_points())
+      --love.graphics.line( get_points())
     end
     --love.graphics.print(points[1][1] or "idk", 10, 25)
     love.graphics.points(points)
