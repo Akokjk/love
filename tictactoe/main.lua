@@ -32,16 +32,22 @@ function love.load()
     sizeX = width -boundary
     sizeY = width -boundary
   end
+  centerX = width/2;
+  centerY = height/2;
+  transXtop = centerX-sizeX/2
+  transYtop = centerY-sizeY/2
   if sizeX > sizeY then
     mainFont = love.graphics.newFont("Roboto-Regular.ttf", math.floor(sizeY/50),  "mono")
     questionFont = love.graphics.newFont("Roboto-Regular.ttf", math.floor((sizeY*.3)/6),  "mono")
   else
     mainFont = love.graphics.newFont("Roboto-Regular.ttf", math.floor(sizeX/50),  "mono")
-    questionFont = love.graphics.newFont("Roboto-Regular.ttf", math.floor((sizeX*.3)/6),  "mono")
+    questionFont = love.graphics.newFont("Roboto-Regular.ttf", math.floor((sizeY*.3)/6),  "mono")
   end
 
   love.graphics.setFont(mainFont)
-  question = generateQuestion(love.math.random(6,  150))
+
+  question = generateQuestion(love.math.random(6,  50))
+
 end
 
 
@@ -51,22 +57,7 @@ function love.draw()
 
     love.graphics.clear( 29/255, 23/255, 23/255, 1, 0, false )
     love.graphics.setColor(255,255,255)
-    --love.graphics.print("Tic Tac Toe by Akokjk", 10, 10)
-    --so get the size of the screen if x:y then closer to 16:9 make x bigger visa versa
-    width, height = love.graphics.getDimensions()
-    centerX = width/2;
-    centerY = height/2;
 
-    if(width > height or height == width) then
-      sizeX = height -boundary
-      sizeY = height - boundary
-    else
-      sizeX = width -boundary
-      sizeY = width -boundary
-    end
-
-    transXtop = centerX-sizeX/2
-    transYtop = centerY-sizeY/2
 
     --question goes here
 
@@ -74,7 +65,21 @@ function love.draw()
     love.graphics.rectangle("line", transXtop, transYtop, sizeX, sizeY)
 
     love.graphics.setFont(questionFont)
-    love.graphics.print(question, transXtop, transYtop)
+    titleHieght = sizeY*.3
+
+    for i = 1, question[0], 1 do
+      love.graphics.print(question[i],
+
+        (transXtop --offset inside the box
+      + sizeX/2 --center in box
+      - questionFont:getWidth(question[i])/2), --center text by offsetting by half width
+
+        (transYtop
+      + (titleHieght - titleHieght/6 * lines[0])/2) -- centers the text
+      - (questionFont:getHeight()*(i-1)/question[0])/2  --divides text into sections based on line height and moves it half up the size
+      + (questionFont:getHeight()*(i-1))) --puts text into correct divided sector
+    end
+
     love.graphics.setFont(mainFont)
 
     love.graphics.print("Button Box", transXtop, transYtop + sizeY/3)
@@ -92,9 +97,9 @@ function love.draw()
 
     --debug info
 
-    love.graphics.print(width .. " X " .. height, transXtop + sizeX*.86, transYtop + sizeY*.98) --resolution
+    love.graphics.print(width .. " X " .. height, transXtop + sizeX*.86, transYtop + sizeY*.97) --resolution
     love.graphics.print("FPS: "..tostring(love.timer.getFPS( )), transXtop + sizeX*.86, transYtop + sizeY*.95) -- fps
-
+    love.graphics.print("Lines: "..tostring(question[0]), transXtop + sizeX*.86, transYtop + sizeY*.93) -- fps
 
 end
 
@@ -115,6 +120,19 @@ function love.update(dt)
    end
    Width = love.graphics.getWidth()
    Height = love.graphics.getHeight()
+   centerX = width/2;
+   centerY = height/2;
+
+   if(width > height or height == width) then
+     sizeX = height -boundary
+     sizeY = height - boundary
+   else
+     sizeX = width -boundary
+     sizeY = width -boundary
+   end
+
+   transXtop = centerX-sizeX/2
+   transYtop = centerY-sizeY/2
    if sizeX > sizeY then
      mainFont = love.graphics.setNewFont("Roboto-Regular.ttf", math.floor(sizeY/50),  "mono")
      questionFont = love.graphics.newFont("Roboto-Regular.ttf", math.floor((sizeY*.3)/6),  "mono")
@@ -132,13 +150,36 @@ end
 
 
 function generateQuestion(num)
-  question = ""
+  qstring = ""
   for i = 0, num, 1 do
-    if love.math.random(0,1) == 1 then
-      question = question .. "X"
+    if love.math.random(1,6) < 5 or i == 0 or i == num or qstring:sub(i,i) == " " then
+      qstring = qstring .. "X"
     else
-      question = question .. "O"
+      qstring = qstring .. " "
     end
   end
-  return question .. "?"
+  lines = {}
+  lines[0] = 1
+  return formatQuestion(qstring, lines)
+end
+
+
+function formatQuestion(qstring, lines)
+  if string.len(qstring) > 30 then -- could generalize the number of chracters by calculating based on how many characters i want to fit and how many rows.
+    print("Question length: " .. string.len(qstring))
+    print("Char at 1: " .. qstring:sub(1,1))
+    for i = 30, 1, -1 do
+      if qstring:sub(i,i) == " " then
+        print("\nFound Space at index: " .. i)
+        lines[lines[0]] = qstring:sub(0, i)
+        qstring = qstring:sub(i+1, string.len(qstring))
+        lines[0] = lines[0]+1
+        formatQuestion(qstring, lines)
+      end
+    end
+  else
+    lines[lines[0]] = qstring .. '?'
+  end
+
+  return lines
 end

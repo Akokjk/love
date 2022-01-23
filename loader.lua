@@ -19,15 +19,12 @@ function loader.getWindowPos(height, width )
       love.window.setPosition(win_x, win_y, 1)
     end
   end
-  data:close()
 end
 
 function loader.quit()
   data = io.open("data", "w"):close()
-  io.output(data)
   local x, y, dispindex = love.window.getPosition()
   io.write(x .. "\n" .. y)
-  io.close(data)
 end
 
 return loader
