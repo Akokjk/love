@@ -1,4 +1,9 @@
+
 local loader = require "loader"
+--local ltn12 = require("ltn12")
+local https = require('ssl.https')
+local lunajson = require 'lunajson'
+
 function love.load()
 
   --config options
@@ -30,7 +35,9 @@ function love.load()
   debugFont = love.graphics.newFont("Roboto-Regular.ttf", 10,  "mono")
   love.graphics.setFont(mainFont)
   answers = {}
-  question = generateQuestion(love.math.random(140,  140), 30)
+  --question = generateQuestion(love.math.random(140,  140), 30)
+  question = {}
+  question = formatQuestion(getQuestion(), question, 30)
   for i = 1, 6, 1 do
     answers[i] = generateQuestion(love.math.random(5,  40), 15)
     if i == 5 then
@@ -225,4 +232,31 @@ function formatQuestion(qstring, lines, length)
   end
 
   return lines
+end
+
+
+function getQuestion()
+  https.TIMEOUT= 10
+  link = 'https://opentdb.com/api.php?amount=1&type=multiple'
+  resp = {}
+  body, code, headers = https.request{
+                                  url = link,
+                                  headers = { ['Connection'] = 'close' },
+                                  sink = ltn12.sink.table(resp)
+                                   }
+  if code~=200 then
+      print("Error: ".. (code or '') )
+      return
+  end
+  --print("Status:", body and "OK" or "FAILED")
+  --print("HTTP code:", code)
+  --print("Response headers:")
+  -- if type(headers) == "table" then
+  --   for k, v in pairs(headers) do
+  --     print(k, ":", v)
+  --   end
+  -- end
+  jsonparse = lunajson.decode(table.concat(resp), 31)
+
+  return jsonparse["question"]
 end
